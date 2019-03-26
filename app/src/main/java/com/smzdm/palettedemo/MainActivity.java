@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,12 +35,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CODE_PERMISSION = 2;
     private static final String IMAGE_UNSPECIFIED = "image/*";
 
+    private View root;
     private Toolbar toolbar;
     private ImageView icon;
     private TextView tv_title;
     private Button btn_vibrant, btn_vibrant_dark, btn_vibrant_light, btn_muted, btn_muted_dark, btn_muted_light;
 
     private Palette palette;
+
+    private int[] colors = {0, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle("");
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        root = findViewById(R.id.root);
         icon = findViewById(R.id.icon);
         tv_title = findViewById(R.id.tv_title);
         btn_vibrant = findViewById(R.id.btn_vibrant);
@@ -79,7 +83,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             default:
-                setColor(v);
+                if (palette == null) {
+                    break;
+                }
+                addBackgroundColor(getSwatch(palette, v));
                 break;
         }
     }
@@ -110,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean hasPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+                    != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
                 } else {
@@ -168,16 +175,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onGenerated(@NonNull Palette palette) {
                 MainActivity.this.palette = palette;
                 setButtonColor();
-                setColor(btn_muted);
-
+                colors[0] = 0;
+                colors[1] = 0;
+                addBackgroundColor(getSwatch(palette, btn_muted_light));
+                addBackgroundColor(getSwatch(palette, btn_muted));
+                addBackgroundColor(getSwatch(palette, btn_muted_dark));
             }
         });
     }
 
-    private void setColor(View button) {
-        if (palette == null) {
-            return;
-        }
+    private Palette.Swatch getSwatch(Palette palette, View button) {
         Palette.Swatch swatch;
         switch (button.getId()) {
             case R.id.btn_vibrant:
@@ -200,19 +207,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 swatch = palette.getMutedSwatch();
                 break;
         }
+        return swatch;
+    }
+
+    private void addBackgroundColor(Palette.Swatch swatch) {
         if (swatch == null) {
             return;
         }
-        toolbar.setBackgroundColor(swatch.getRgb());
+        if (colors[1] == 0) {
+            colors[1] = swatch.getRgb();
+        } else if (colors[0] == 0) {
+            colors[0] = swatch.getRgb();
+            setRootBackground(swatch);
+        }
+    }
+
+    private void setRootBackground(Palette.Swatch swatch) {
+        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+        root.setBackground(bg);
+        root.post(new Runnable() {
+            @Override
+            public void run() {
+                colors[0] = 0;
+                colors[1] = 0;
+            }
+        });
+
         tv_title.setTextColor(swatch.getTitleTextColor());
         Drawable drawable = toolbar.getNavigationIcon();
         if (drawable != null) {
             DrawableCompat.setTint(drawable, swatch.getTitleTextColor());
-        }
-
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            Window window = getWindow();
-            window.setStatusBarColor(swatch.getRgb());
         }
     }
 
@@ -245,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int fetchDefaultButtonColor() {
         TypedValue typedValue = new TypedValue();
 
-        TypedArray a = obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorButtonNormal });
+        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorButtonNormal});
         int color = a.getColor(0, 0);
 
         a.recycle();
