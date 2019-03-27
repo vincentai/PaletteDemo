@@ -11,11 +11,18 @@
     <Button
         android:id="@+id/btn_vibrant"
         android:layout_width="260dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
         android:gravity="center"
         android:text="Vibrant (有活力的)"
         android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_vibrant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#999999"/>
 
     <Button
         android:id="@+id/btn_vibrant_dark"
@@ -26,6 +33,13 @@
         android:text="Vibrant dark(有活力的 暗色调)"
         android:textColor="@android:color/white" />
 
+    <TextView
+        android:id="@+id/tv_vibrant_dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#999999"/>
+
     <Button
         android:id="@+id/btn_vibrant_light"
         android:layout_width="260dp"
@@ -34,6 +48,13 @@
         android:gravity="center"
         android:text="Vibrant light(有活力的 明亮)"
         android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_vibrant_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#999999"/>
 
     <Button
         android:id="@+id/btn_muted"
@@ -44,6 +65,13 @@
         android:text="Muted (柔和的)"
         android:textColor="@android:color/white" />
 
+    <TextView
+        android:id="@+id/tv_muted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#999999"/>
+
     <Button
         android:id="@+id/btn_muted_dark"
         android:layout_width="260dp"
@@ -53,6 +81,13 @@
         android:text="Muted dark(柔和的 暗色调)"
         android:textColor="@android:color/white" />
 
+    <TextView
+        android:id="@+id/tv_muted_dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#999999"/>
+
     <Button
         android:id="@+id/btn_muted_light"
         android:layout_width="260dp"
@@ -61,5 +96,12 @@
         android:gravity="center"
         android:text="Muted light(柔和的 明亮)"
         android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_muted_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#999999"/>
 
 </LinearLayout>

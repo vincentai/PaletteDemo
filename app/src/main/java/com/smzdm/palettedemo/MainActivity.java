@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView icon;
     private TextView tv_title;
     private Button btn_vibrant, btn_vibrant_dark, btn_vibrant_light, btn_muted, btn_muted_dark, btn_muted_light;
+    private TextView tv_vibrant, tv_vibrant_dark, tv_vibrant_light, tv_muted, tv_muted_dark, tv_muted_light;
 
     private Palette palette;
 
@@ -64,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_muted = findViewById(R.id.btn_muted);
         btn_muted_dark = findViewById(R.id.btn_muted_dark);
         btn_muted_light = findViewById(R.id.btn_muted_light);
+        tv_vibrant = findViewById(R.id.tv_vibrant);
+        tv_vibrant_dark = findViewById(R.id.tv_vibrant_dark);
+        tv_vibrant_light = findViewById(R.id.tv_vibrant_light);
+        tv_muted = findViewById(R.id.tv_muted);
+        tv_muted_dark = findViewById(R.id.tv_muted_dark);
+        tv_muted_light = findViewById(R.id.tv_muted_light);
 
         fab.setOnClickListener(this);
         btn_vibrant.setOnClickListener(this);
@@ -243,26 +250,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setButtonColor() {
         int buttonDefaultColor = fetchDefaultButtonColor();
         Palette.Swatch swatch = palette.getVibrantSwatch();
-        setButtonColor(btn_vibrant, swatch, buttonDefaultColor);
+        setButtonColor(btn_vibrant, tv_vibrant, swatch, buttonDefaultColor);
         swatch = palette.getDarkVibrantSwatch();
-        setButtonColor(btn_vibrant_dark, swatch, buttonDefaultColor);
+        setButtonColor(btn_vibrant_dark, tv_vibrant_dark, swatch, buttonDefaultColor);
         swatch = palette.getLightVibrantSwatch();
-        setButtonColor(btn_vibrant_light, swatch, buttonDefaultColor);
+        setButtonColor(btn_vibrant_light, tv_vibrant_light, swatch, buttonDefaultColor);
         swatch = palette.getMutedSwatch();
-        setButtonColor(btn_muted, swatch, buttonDefaultColor);
+        setButtonColor(btn_muted, tv_muted, swatch, buttonDefaultColor);
         swatch = palette.getDarkMutedSwatch();
-        setButtonColor(btn_muted_dark, swatch, buttonDefaultColor);
+        setButtonColor(btn_muted_dark, tv_muted_dark, swatch, buttonDefaultColor);
         swatch = palette.getLightMutedSwatch();
-        setButtonColor(btn_muted_light, swatch, buttonDefaultColor);
+        setButtonColor(btn_muted_light, tv_muted_light, swatch, buttonDefaultColor);
     }
 
-    private void setButtonColor(Button button, Palette.Swatch swatch, int buttonDefaultColor) {
+    private void setButtonColor(Button button, TextView textView, Palette.Swatch swatch, int buttonDefaultColor) {
         if (swatch != null) {
             button.setBackgroundColor(swatch.getRgb());
             button.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+            textView.setText(String.format("#%06X", 0xFFFFFF & swatch.getRgb()));
+            textView.setTextColor(swatch.getBodyTextColor());
         } else {
             button.setBackgroundColor(buttonDefaultColor);
             button.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_close, 0);
+            textView.setText("");
         }
     }
 
